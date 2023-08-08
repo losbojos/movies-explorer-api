@@ -1,6 +1,8 @@
 const process = require('process');
 const express = require('express');
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+const { addMiddlewares } = require('./routes/index');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -8,6 +10,12 @@ const app = express();
 // Добавляем переменные окружения из файла .env,
 // который должен присутствовать только на физическом сервере, не в репозитории.
 dotenv.config();
+
+// подключаемся к серверу mongo
+mongoose.connect('mongodb://0.0.0.0:27017/movies-explorer', { useNewUrlParser: true });
+
+// подключаем мидлвары, включая роуты и всё остальное...
+addMiddlewares(app);
 
 process.on('uncaughtException', (err, origin) => {
   console.log(`${origin}: Произошла необработанная ошибка ${err.name} с текстом "${err.message}". Обратите внимание!`);
