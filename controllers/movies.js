@@ -57,15 +57,15 @@ const getMovies = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  const { _id } = req.params;
+  const { movieId } = req.params;
   const userId = req.user._id; // авторизованный пользователь
 
-  Movie.findById(_id)
+  Movie.findById(movieId)
     .orFail(new NotFoundError())
     .then((movie) => {
       if (!movie.owner.equals(userId)) next(new ForbiddenError('Запрещено удалять фильмы другого пользователя.'));
       else {
-        Movie.findByIdAndDelete(_id).then((deletedMovie) => {
+        Movie.findByIdAndDelete(movieId).then((deletedMovie) => {
           res.send(deletedMovie);
         })
           .catch(next);

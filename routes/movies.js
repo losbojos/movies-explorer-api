@@ -8,13 +8,7 @@ const {
 
 const checkObjectId = Joi.string().required().hex().length(24);
 
-const celebrateObjectId = celebrate({
-  params: Joi.object().keys({
-    _id: checkObjectId,
-  }),
-});
-
-router.get('/', celebrateObjectId, getMovies);
+router.get('/', getMovies);
 
 router.post(
   '/',
@@ -28,7 +22,7 @@ router.post(
       image: Joi.string().required().regex(urlPattern),
       trailerLink: Joi.string().required().regex(urlPattern),
       thumbnail: Joi.string().required().regex(urlPattern),
-      owner: checkObjectId,
+      // owner: checkObjectId,
       movieId: Joi.number().required(),
       nameRU: Joi.string().required(),
       nameEN: Joi.string().required(),
@@ -38,8 +32,12 @@ router.post(
 );
 
 router.delete(
-  '/_id',
-  celebrateObjectId,
+  '/:movieId',
+  celebrate({
+    params: Joi.object().keys({
+      movieId: checkObjectId,
+    }),
+  }),
   deleteMovie,
 );
 

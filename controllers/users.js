@@ -59,7 +59,8 @@ const createUser = (req, res, next) => {
 };
 
 const getMe = (req, res, next) => {
-  User.findById(req.user._id)
+  const userId = req.user._id;
+  User.findById(userId)
     .orFail(new NotFoundError())
     .then((user) => {
       res.send(user);
@@ -74,20 +75,27 @@ const getMe = (req, res, next) => {
 };
 
 const patchMe = (req, res, next) => {
-  const { name, email, _id } = req.body;
+  const { name, email } = req.body;
+  const userId = req.user._id;
 
-  User.findByIdAndUpdate(_id, { name, email }, { new: true, runValidators: true })
-    .orFail(new NotFoundError(NOT_FOUND_USER_ERROR))
-    .then((user) => {
-      res.send(user);
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new InvalidDataError(err.message));
-      } else {
-        next(err);
-      }
-    });
+  if (!name && !email) {
+    next(new InvalidDataError('Задайте хотя бы одно свойство объекта для изменения'));
+  } else {
+    User.findByIdAndUpdate(userId, { name, email }, { new: true, runValidators: true })
+      .orFail(new NotFoundError(NOT_FOUND_USER_ERROR))
+      .then((user) => {
+        res.send(user);
+      })
+      .catch((err) => {
+        if (err.name === 'ValidationError') {
+          next(new InvalidDataError(err.message));
+        } else if (err.code === 11000) {
+          next(new ConflictError(EMAIL_ALREADY_EXISTS));
+        } else {
+          next(err);
+        }
+      });
+  }
 };
 
 const login = (req, res, next) => {
