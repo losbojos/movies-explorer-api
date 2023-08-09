@@ -1,7 +1,7 @@
 const express = require('express');
 // const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
-// const cors = require('cors');
+const cors = require('cors');
 
 const usersRouter = require('./users');
 const moviesRouter = require('./movies');
@@ -13,10 +13,10 @@ const { requestLogger, errorLogger } = require('../middlewares/logger');
 
 // подключаем мидлвары, роуты и всё остальное...
 const addMiddlewares = (app) => {
-  // app.use(cors({
-  //   origin: ['https://localhost:3005', 'https://losbojos.mesto.nomoreparties.co'],
-  //   credentials: true,
-  // }));
+  app.use(cors({
+    origin: ['https://localhost:3003', 'https://api.lifemovie.nomoreparties.co'],
+    credentials: true,
+  }));
 
   app.use(express.json());
 

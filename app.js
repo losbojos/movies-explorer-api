@@ -4,12 +4,12 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const { addMiddlewares } = require('./routes/index');
 
-const { PORT = 3000 } = process.env;
-const app = express();
-
 // Добавляем переменные окружения из файла .env,
 // который должен присутствовать только на физическом сервере, не в репозитории.
 dotenv.config();
+
+const { PORT = 3003 } = process.env;
+const app = express();
 
 // подключаемся к серверу mongo
 mongoose.connect('mongodb://0.0.0.0:27017/movies-explorer', { useNewUrlParser: true });
