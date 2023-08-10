@@ -1,14 +1,9 @@
-const INVALID_DATA_ERROR_CODE = 400;
-const INVALID_DATA_ERROR_NAME = 'InvalidDataError';
+const { INVALID_DATA_ERROR_CODE, INVALID_DATA_ERROR_NAME, INVALID_DATA_ERROR_MSG } = require('./consts');
 
-class InvalidDataError extends Error {
-  constructor(message = 'Переданы некорректные данные') {
+module.exports = class InvalidDataError extends Error {
+  constructor(message = INVALID_DATA_ERROR_MSG) {
     super(message);
     this.name = INVALID_DATA_ERROR_NAME;
     this.statusCode = INVALID_DATA_ERROR_CODE;
   }
-}
-
-module.exports = {
-  INVALID_DATA_ERROR_CODE, INVALID_DATA_ERROR_NAME, InvalidDataError,
 };

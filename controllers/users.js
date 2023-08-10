@@ -1,10 +1,10 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
-const { NotFoundError } = require('../errors/NotFoundError');
-const { ConflictError } = require('../errors/ConflictError');
-const { InvalidDataError } = require('../errors/InvalidDataError');
-const { AuthError } = require('../errors/AuthError');
-const { STATUS_CREATED } = require('../errors/statusCodes');
+const NotFoundError = require('../errors/NotFoundError');
+const ConflictError = require('../errors/ConflictError');
+const InvalidDataError = require('../errors/InvalidDataError');
+const AuthError = require('../errors/AuthError');
+const { STATUS_CREATED } = require('../errors/consts');
 const { getJwtToken } = require('../middlewares/auth');
 
 const SALT_ROUNDS = 10;

@@ -1,6 +1,6 @@
-const { DEFAULT_ERROR_CODE } = require('./DefaultError');
+const { DEFAULT_ERROR_CODE, DEFAULT_ERROR_MSG } = require('./consts');
 
-const errorHandler = (err, req, res, next) => {
+module.exports = function errorHandler(err, req, res, next) {
   let statusCode;
   let message;
 
@@ -9,7 +9,7 @@ const errorHandler = (err, req, res, next) => {
     message = err.message;
   } else {
     statusCode = DEFAULT_ERROR_CODE;
-    message = `Ошибка на сервере: ${err.message}`;
+    message = `${DEFAULT_ERROR_MSG}: ${err.message}`;
   }
 
   res
@@ -20,5 +20,3 @@ const errorHandler = (err, req, res, next) => {
 
   next();
 };
-
-module.exports = { errorHandler };

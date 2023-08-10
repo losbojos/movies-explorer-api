@@ -1,15 +1,9 @@
-// Не удается обработать запрос из-за конфликта в текущем состоянии ресурса.
-const CONFLICT_ERROR_CODE = 409;
-const CONFLICT_ERROR_NAME = 'ConflictError';
+const { CONFLICT_ERROR_CODE, CONFLICT_ERROR_NAME, CONFLICT_ERROR_MSG } = require('./consts');
 
-class ConflictError extends Error {
-  constructor(message = 'Конфликт в состоянии ресурса.') {
+module.exports = class ConflictError extends Error {
+  constructor(message = CONFLICT_ERROR_MSG) {
     super(message);
     this.name = CONFLICT_ERROR_NAME;
     this.statusCode = CONFLICT_ERROR_CODE;
   }
-}
-
-module.exports = {
-  CONFLICT_ERROR_CODE, CONFLICT_ERROR_NAME, ConflictError,
 };

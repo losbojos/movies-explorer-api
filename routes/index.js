@@ -2,19 +2,29 @@ const express = require('express');
 // const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const usersRouter = require('./users');
 const moviesRouter = require('./movies');
-const { errorHandler } = require('../errors/errorHandler');
-const { NotFoundError } = require('../errors/NotFoundError');
+const errorHandler = require('../errors/errorHandler');
+const NotFoundError = require('../errors/NotFoundError');
 const { createUser, login /* , logout */ } = require('../controllers/users');
 const { checkJwtToken } = require('../middlewares/auth');
 const { requestLogger, errorLogger } = require('../middlewares/logger');
 
 // подключаем мидлвары, роуты и всё остальное...
 const addMiddlewares = (app) => {
+  app.use(helmet()); // для установки заголовков, связанных с безопасностью
+
+  const limiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // за 1 минуту
+    max: 100, // можно совершить максимум 100 запросов с одного IP
+  });
+  app.use(limiter); // защита от брутфорс и DDоS
+
   app.use(cors({
-    origin: ['https://localhost:3003', 'https://api.lifemovie.nomoreparties.co'],
+    origin: ['https://localhost', 'https://lifemovie.nomoreparties.co'],
     credentials: true,
   }));
 

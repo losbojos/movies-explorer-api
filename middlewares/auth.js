@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { AuthError } = require('../errors/AuthError');
+const AuthError = require('../errors/AuthError');
 const User = require('../models/user');
 
 function getSecretKey() {

@@ -1,8 +1,8 @@
 const Movie = require('../models/movie');
-const { NotFoundError } = require('../errors/NotFoundError');
-const { ForbiddenError } = require('../errors/ForbiddenError');
-const { InvalidDataError } = require('../errors/InvalidDataError');
-const { STATUS_CREATED } = require('../errors/statusCodes');
+const NotFoundError = require('../errors/NotFoundError');
+const ForbiddenError = require('../errors/ForbiddenError');
+const InvalidDataError = require('../errors/InvalidDataError');
+const { STATUS_CREATED } = require('../errors/consts');
 
 const createMovie = (req, res, next) => {
   const userId = req.user._id;

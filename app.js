@@ -8,11 +8,11 @@ const { addMiddlewares } = require('./routes/index');
 // который должен присутствовать только на физическом сервере, не в репозитории.
 dotenv.config();
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, DATABASE = 'mongodb://0.0.0.0:27017/bitfilmsdb' } = process.env;
 const app = express();
 
 // подключаемся к серверу mongo
-mongoose.connect('mongodb://0.0.0.0:27017/movies-explorer', { useNewUrlParser: true });
+mongoose.connect(DATABASE, { useNewUrlParser: true });
 
 // подключаем мидлвары, включая роуты и всё остальное...
 addMiddlewares(app);
