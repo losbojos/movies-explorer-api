@@ -8,7 +8,7 @@ const { addMiddlewares } = require('./routes/index');
 // который должен присутствовать только на физическом сервере, не в репозитории.
 dotenv.config();
 
-const { PORT = 3003 } = process.env;
+const { PORT = 3000 } = process.env;
 const app = express();
 
 // подключаемся к серверу mongo
