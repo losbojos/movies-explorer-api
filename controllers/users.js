@@ -4,15 +4,20 @@ const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 const InvalidDataError = require('../errors/InvalidDataError');
 const AuthError = require('../errors/AuthError');
-const { STATUS_CREATED } = require('../errors/consts');
+const {
+  STATUS_CREATED,
+  VALIDATION_ERROR_NAME,
+  CAST_ERROR_NAME,
+  NOT_FOUND_USER_ERROR,
+  AUTH_WRONG_DATA,
+  EMAIL_ALREADY_EXISTS,
+  NO_PARAMS_FOR_CHANGE,
+} = require('../errors/consts');
+
 const { getJwtToken } = require('../middlewares/auth');
 
 const SALT_ROUNDS = 10;
 // const JWT_COOKIE = 'jwt';
-
-const NOT_FOUND_USER_ERROR = 'Пользователь с указанным идентификатором не найден.';
-const AUTH_WRONG_DATA = 'Неверные имя пользователя или пароль.';
-const EMAIL_ALREADY_EXISTS = 'Пользователь с таким email уже зарегистрирован';
 
 // регистронезависимый поиск email
 const findUserByEmail = (email) => {
@@ -43,7 +48,7 @@ const createUser = (req, res, next) => {
               .catch((err) => {
                 if (err.code === 11000) {
                   next(new ConflictError(EMAIL_ALREADY_EXISTS));
-                } else if (err.name === 'ValidationError') {
+                } else if (err.name === VALIDATION_ERROR_NAME) {
                   next(new InvalidDataError(err.message));
                 } else {
                   next(err);
@@ -66,8 +71,8 @@ const getMe = (req, res, next) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new InvalidDataError(`Ошибка конвертации: ${err.message}`));
+      if (err.name === CAST_ERROR_NAME) {
+        next(new InvalidDataError(err.message));
       } else {
         next(err);
       }
@@ -79,7 +84,7 @@ const patchMe = (req, res, next) => {
   const userId = req.user._id;
 
   if (!name && !email) {
-    next(new InvalidDataError('Задайте хотя бы одно свойство объекта для изменения'));
+    next(new InvalidDataError(NO_PARAMS_FOR_CHANGE));
   } else {
     User.findByIdAndUpdate(userId, { name, email }, { new: true, runValidators: true })
       .orFail(new NotFoundError(NOT_FOUND_USER_ERROR))
@@ -87,7 +92,7 @@ const patchMe = (req, res, next) => {
         res.send(user);
       })
       .catch((err) => {
-        if (err.name === 'ValidationError') {
+        if (err.name === VALIDATION_ERROR_NAME) {
           next(new InvalidDataError(err.message));
         } else if (err.code === 11000) {
           next(new ConflictError(EMAIL_ALREADY_EXISTS));
