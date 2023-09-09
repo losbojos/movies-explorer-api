@@ -14,7 +14,7 @@ const { checkJwtToken } = require('../middlewares/auth');
 const { requestLogger, errorLogger } = require('../middlewares/logger');
 
 // подключаем мидлвары, роуты и всё остальное...
-const addMiddlewares = (app) => {
+const addMiddlewares = (app, allowLocalhost) => {
   app.use(helmet()); // для установки заголовков, связанных с безопасностью
 
   const limiter = rateLimit({
@@ -23,8 +23,16 @@ const addMiddlewares = (app) => {
   });
   app.use(limiter); // защита от брутфорс и DDоS
 
+  const originAdresses = ['https://lifemovie.nomoreparties.co'];
+  if (allowLocalhost) {
+    originAdresses.push('http://localhost:3000');
+    originAdresses.push('https://localhost:3000');
+  }
+
+  console.log(originAdresses);
+
   app.use(cors({
-    origin: ['https://localhost:3000', 'https://lifemovie.nomoreparties.co'],
+    origin: originAdresses,
     credentials: true,
   }));
 
