@@ -24,7 +24,7 @@ const addMiddlewares = (app) => {
   app.use(limiter); // защита от брутфорс и DDоS
 
   app.use(cors({
-    origin: ['https://localhost', 'https://lifemovie.nomoreparties.co'],
+    origin: ['https://localhost:3000', 'https://lifemovie.nomoreparties.co'],
     credentials: true,
   }));
 
