@@ -29,8 +29,6 @@ const addMiddlewares = (app, allowLocalhost) => {
     originAdresses.push('https://localhost:3000');
   }
 
-  console.log(originAdresses);
-
   app.use(cors({
     origin: originAdresses,
     credentials: true,
