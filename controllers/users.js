@@ -4,7 +4,9 @@ const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 const InvalidDataError = require('../errors/InvalidDataError');
 const AuthError = require('../errors/AuthError');
+
 const {
+  STATUS_OK,
   STATUS_CREATED,
   VALIDATION_ERROR_NAME,
   CAST_ERROR_NAME,
@@ -25,6 +27,16 @@ const findUserByEmail = (email) => {
   return User.findOne({ email: { $regex: regex } });
 };
 
+const createAuthResult = (user) => {
+  const data = {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    token: getJwtToken(user._id),
+  };
+  return data;
+};
+
 const createUser = (req, res, next) => {
   const {
     name, email, password,
@@ -39,11 +51,7 @@ const createUser = (req, res, next) => {
               name, email, password: hash,
             })
               .then((user) => {
-                res.status(STATUS_CREATED).send({
-                  _id: user._id,
-                  name: user.name,
-                  email: user.email,
-                });
+                res.status(STATUS_CREATED).send(createAuthResult(user));
               })
               .catch((err) => {
                 if (err.code === 11000) {
@@ -116,23 +124,16 @@ const login = (req, res, next) => {
             if (!success) {
               next(new AuthError(AUTH_WRONG_DATA));
             } else {
-              const token = getJwtToken(user._id);
+              res.status(STATUS_OK).send(createAuthResult(user));
 
-              res
-                // .cookie(JWT_COOKIE, token, {
+              /*
+              // .cookie(JWT_COOKIE, token, {
                 //   maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
                 //   httpOnly: true,
                 //   secure: true,
                 //   sameSite: 'none', // 'strict'
                 // })
-                .status(200).send({
-                  token,
-                  user: {
-                    _id: user._id,
-                    name: user.name,
-                    email: user.email,
-                  },
-                });
+              */
             }
           })
           .catch(next);

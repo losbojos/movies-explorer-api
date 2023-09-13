@@ -22,7 +22,7 @@ router.post(
       image: Joi.string().required().regex(urlPattern),
       trailerLink: Joi.string().required().regex(urlPattern),
       thumbnail: Joi.string().required().regex(urlPattern),
-      // owner: checkObjectId,
+      // owner: checkObjectId, // Заполняется из авторизационных данных пользователя
       movieId: Joi.number().required(),
       nameRU: Joi.string().required(),
       nameEN: Joi.string().required(),
@@ -32,10 +32,10 @@ router.post(
 );
 
 router.delete(
-  '/:movieId',
+  '/:id',
   celebrate({
     params: Joi.object().keys({
-      movieId: checkObjectId,
+      id: checkObjectId,
     }),
   }),
   deleteMovie,

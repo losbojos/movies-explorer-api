@@ -26,7 +26,7 @@ const DEFAULT_ERROR_MSG = 'Ошибка на сервере';
 
 const NOT_FOUND_USER_ERROR = 'Пользователь с указанным идентификатором не найден.';
 const AUTH_WRONG_DATA = 'Неверные имя пользователя или пароль.';
-const EMAIL_ALREADY_EXISTS = 'Пользователь с таким email уже зарегистрирован.';
+const EMAIL_ALREADY_EXISTS = 'Пользователь с таким email уже существует.';
 const NO_PARAMS_FOR_CHANGE = 'Задайте хотя бы одно свойство объекта для изменения.';
 const FORBIDDEN_DELETE_NON_OWN_MOVIES = 'Запрещено удалять фильмы другого пользователя.';
 

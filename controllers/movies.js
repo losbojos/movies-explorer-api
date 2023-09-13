@@ -11,33 +11,10 @@ const {
 
 const createMovie = (req, res, next) => {
   const userId = req.user._id;
-  const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    movieId,
-    nameRU,
-    nameEN,
-  } = req.body;
 
   Movie.create({
+    ...req.body,
     owner: userId,
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    movieId,
-    nameRU,
-    nameEN,
   })
     .then((movie) => {
       res.status(STATUS_CREATED).send(movie);
@@ -62,15 +39,16 @@ const getMovies = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  const { movieId } = req.params;
+  const { id } = req.params; // Параметр вызова id объекта фильма в данной БД (_id, а не movieId)
   const userId = req.user._id; // авторизованный пользователь
 
-  Movie.findById(movieId)
+  Movie.findById(id)
     .orFail(new NotFoundError())
     .then((movie) => {
-      if (!movie.owner.equals(userId)) next(new ForbiddenError(FORBIDDEN_DELETE_NON_OWN_MOVIES));
-      else {
-        Movie.findByIdAndDelete(movieId).then((deletedMovie) => {
+      if (!movie.owner.equals(userId)) {
+        next(new ForbiddenError(FORBIDDEN_DELETE_NON_OWN_MOVIES));
+      } else {
+        Movie.findByIdAndDelete(id).then((deletedMovie) => {
           res.send(deletedMovie);
         })
           .catch(next);
