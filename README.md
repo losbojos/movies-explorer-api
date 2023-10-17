@@ -42,3 +42,6 @@ $ npm start
 * MongoDB
 * REST API
 * Nginx
+
+## Статус
+Проект завершен
